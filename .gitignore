@@ -1,2 +1,5 @@
 /*/obj/
 /tags
+*.ali
+*.exe
+*.o
