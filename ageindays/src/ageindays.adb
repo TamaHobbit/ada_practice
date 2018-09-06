@@ -80,6 +80,28 @@ procedure Ageindays is
     return 0;
   end GetDaysBetween;
 
+  function PreviousMonth(month : in Month_Number) return Month_Number is
+  begin
+    return (if month = 1 then 12 else month - 1);
+  end PreviousMonth;
+
+  procedure GetAgeDifference(birth_day : in Day_Number; birth_month : in Month_Number; birth_year : in Year_Number;
+                            today_day : in Day_Number; today_month : in Month_Number; today_year : in Year_Number;
+                            DaysOld : out DifferenceDays; MonthsOld : out DifferenceMonths; YearsOld : out DifferenceYears) is
+  begin
+    YearsOld := DifferenceYears(today_year - birth_year);
+    MonthsOld := DifferenceMonths(today_month - birth_month);
+    DaysOld := DifferenceDays(today_day - birth_day);
+    if DaysOld < 0 then
+      MonthsOld := MonthsOld - 1;
+      DaysOld := DifferenceDays(Integer(DaysOld) + Integer(DaysInMonth(PreviousMonth(birth_month), birth_year)));
+    end if;
+    if MonthsOld < 0 then
+      YearsOld := YearsOld - 1;
+      MonthsOld := MonthsOld + 12;
+    end if;
+  end GetAgeDifference;
+
   type InputStatus is (Good, Absurd);
 
   function GetBirthDay(input : in String; day : out Day_Number; month : out Month_Number; year : out Year_Number) return InputStatus is
@@ -147,30 +169,17 @@ begin
       Result : InputStatus;
     begin
       exit when Input = "";
-      Result := GetBirthDay(Input, BirthDay, BirthMonth, BirthYear);
+      Result := GetBirthDay(Input, BirthDay, BirthMonth, BirthYear); --TODO pass today's date so that dates in the future can be rejected
       if Result = Absurd then
         Put_Line("Don't be absurd. Tell me your real birthday");
       else
         Put_Line("Birthday: " & IntegerToString(BirthDay) & '/' & IntegerToString(BirthMonth) & '/' & IntegerToString(BirthYear));
         declare
-          YearsOld : DifferenceYears := DifferenceYears(Today_Year - BirthYear);
-          MonthsOld : DifferenceMonths := DifferenceMonths(Today_Month - BirthMonth);
-          DaysOld : DifferenceDays := DifferenceDays(Today_Day - BirthDay);
-
-          function PreviousMonth(month : in Month_Number) return Month_Number is
-          begin
-            return (if month = 1 then 12 else month - 1);
-          end PreviousMonth;
-
+          YearsOld : DifferenceYears;
+          MonthsOld : DifferenceMonths;
+          DaysOld : DifferenceDays;
         begin
-          if DaysOld < 0 then
-            MonthsOld := MonthsOld - 1;
-            DaysOld := DifferenceDays(Integer(DaysOld) + Integer(DaysInMonth(PreviousMonth(BirthMonth), BirthYear)));
-          end if;
-          if MonthsOld < 0 then
-            YearsOld := YearsOld - 1;
-            MonthsOld := MonthsOld + 12;
-          end if;
+          GetAgeDifference(BirthDay, BirthMonth, BirthYear, Today_Day, Today_Month, Today_Year, DaysOld, MonthsOld, YearsOld);
           Put_Line("You are" & YearsOld'Image & " years," & MonthsOld'Image & " months and" & DaysOld'Image & " days old.");
         end;
       end if;
