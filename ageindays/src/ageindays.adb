@@ -138,6 +138,7 @@ begin
   declare
   begin
     loop
+      Put("> ");
       declare
         Input : constant String := Get_Line;
         BirthDay : Day_Number;
@@ -146,7 +147,6 @@ begin
         Result : InputStatus;
       begin
         exit when Input = "";
-        Put("> ");
         Result := GetBirthDay(Input, BirthDay, BirthMonth, BirthYear);
         if Result = Absurd then
           Put_Line("Don't be absurd. Tell me your real birthday");
