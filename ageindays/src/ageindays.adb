@@ -3,6 +3,7 @@ with GNAT.Regpat;            use GNAT.Regpat;
 with Ada.Strings.Bounded;    use Ada.Strings.Bounded;
 with Ada.Strings.Unbounded;  use Ada.Strings.unbounded;
 with StringUtil;             use StringUtil;
+with Ada.Calendar;           use Ada.Calendar;
 
 procedure Ageindays is
 
@@ -59,34 +60,89 @@ procedure Ageindays is
     raise Program_Error;
   end GetMonthIndex;
 
+  function IsLeapYear(year : Ada.Calendar.Year_Number) return Boolean is
+  begin
+    return year mod 4 = 0 and (year mod 100 /= 0 or year mod 400 = 0);
+  end IsLeapYear;
+
+  Today_Day : Ada.Calendar.Day_Number;
+  Today_Month : Ada.Calendar.Month_Number;
+  Today_Year : Ada.Calendar.Year_Number;
 begin
+  declare
+    TodayTime : Ada.Calendar.Time := Ada.Calendar.Clock;
+    Today_Seconds : Ada.Calendar.Day_Duration;
+  begin
+    Ada.Calendar.Split(TodayTime, Today_Year, Today_Month, Today_Day, Today_Seconds);
+  end;
+  Put_Line("Today is " & IntegerToString(Integer(Today_Day)) & '/' & IntegerToString(Today_Month) & '/' & IntegerToString(Today_Year));
+
   Put_Line("What is your birthday?");
   Put_Line("Supported formats by example:");
   Put_Line("24th of September 1992");
   declare
     unboundedMonths : String_Array := ToUnboundedStringArray(Months);
-    Re : constant Pattern_Matcher := Compile("(^(1|2)?\d)(th|nd|rd) of (" & StringJoin("|", unboundedMonths) & ") (\d{4})$");
+    Re : constant Pattern_Matcher := Compile("(^(1|2)?\d)(th|nd|rd) of (" & StringJoin("|", unboundedMonths) & ") ((19|20)\d{2})$");
   begin
     loop
       declare
         Input : constant String := Get_Line;
         Matches : Match_Array (0..5);
-        Day : Integer;
-        Month : Month_String.Bounded_String;
-        Year : Integer;
+        BirthDay : Ada.Calendar.Day_Number;
+        BirthMonth : Ada.Calendar.Month_Number;
+        BirthYear : Ada.Calendar.Year_Number;
+
+        function DaysInMonth(month : in Integer; year : in Integer) return Integer is
+        begin
+          if month = 2 then
+            return (if IsLeapYear(year) then 29 else 28);
+          end if;
+          if month <= 7 then
+            return (30 + (month mod 2));
+          end if;
+          return (31 - (month mod 2));
+        end DaysInMonth;
       begin
         exit when Input = "";
         Match(Re, Input, Matches);
         if Matches(0) = No_Match then
           Put_Line("No match");
         else
-          Day := Integer'Value(Input(Matches(1).First .. Matches(1).Last));
-          Month := Month_String.To_Bounded_String(Input(Matches(4).First .. Matches(4).Last));
-          Year := Integer'Value(Input(Matches(5).First .. Matches(5).Last));
-          if Year < 2018 - 150 then
+          BirthDay := Integer'Value(Input(Matches(1).First .. Matches(1).Last));
+          declare
+            MonthString : Month_String.Bounded_String := Month_String.To_Bounded_String(Input(Matches(4).First .. Matches(4).Last)); 
+          begin
+            BirthMonth := Integer(GetMonthIndex(MonthString));
+          end;
+          
+          BirthYear := Integer'Value(Input(Matches(5).First .. Matches(5).Last));
+
+          if BirthYear < 1901 then
             Put_Line("Don't be absurd. Tell me your real birthday");
           else
-            Put_Line(IntegerToString(Day) & '/' & IntegerToString(Integer(GetMonthIndex(Month))) & '/' & IntegerToString(Year));
+            Put_Line("Birthday: " & IntegerToString(BirthDay) & '/' & IntegerToString(BirthMonth) & '/' & IntegerToString(BirthYear));
+            declare
+              YearsOld : Integer := Today_Year - BirthYear;
+              MonthsOld : Integer := Today_Month - BirthMonth;
+              DaysOld : Integer := Today_Day - BirthDay;
+
+              function PreviousMonth(month : in Integer) return Integer is
+              begin
+                return (if month = 1 then 12 else month - 1);
+              end PreviousMonth;
+
+            begin
+              Put_Line(PreviousMonth(1)'Image);
+              if DaysOld < 0 then
+                MonthsOld := MonthsOld - 1;
+                DaysOld := DaysOld + DaysInMonth(PreviousMonth(BirthMonth), BirthYear);
+              end if;
+              if MonthsOld < 0 then
+                YearsOld := YearsOld - 1;
+                MonthsOld := MonthsOld + 12;
+              end if;
+              Put_Line("You are" & YearsOld'Image & " years," & MonthsOld'Image & " months and" & DaysOld'Image & " days old.");
+            end;
           end if;
         end if;
       end;
