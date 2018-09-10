@@ -106,8 +106,8 @@ procedure Ageindays is
 
   function GetBirthDay(input : in String; day : out Day_Number; month : out Month_Number; year : out Year_Number) return InputStatus is
     unboundedMonths : String_Array := ToUnboundedStringArray(Months);
-    Re : constant Pattern_Matcher := Compile("(^(1|2|3)?\d)(th|nd|rd) of (" & StringJoin("|", unboundedMonths) & ") ((19|20)\d{2})$");
-    Matches : Match_Array (0..5);
+    Re : constant Pattern_Matcher := Compile("(^(1|2|3)?\d)(th|nd|rd)? (of )?(" & StringJoin("|", unboundedMonths) & ") ((19|20)\d{2})$");
+    Matches : Match_Array (0..6);
   begin
     Match(Re, Input, Matches);
 
@@ -116,14 +116,16 @@ procedure Ageindays is
     end if;
 
     declare
-      MonthString : Month_String.Bounded_String := Month_String.To_Bounded_String(Input(Matches(4).First .. Matches(4).Last)); 
+      MonthMatch : GNAT.Regpat.Match_Location := Matches(5);
+      MonthString : Month_String.Bounded_String := Month_String.To_Bounded_String(Input(MonthMatch.First .. MonthMatch.Last));
     begin
       month := Integer(GetMonthIndex(MonthString));
     end;
-    
+
     declare
       type YearInput is range 1900..2099;
-      YearInteger : YearInput := YearInput'Value(Input(Matches(5).First .. Matches(5).Last));
+      YearMatch : GNAT.Regpat.Match_Location := Matches(6);
+      YearInteger : YearInput := YearInput'Value(Input(YearMatch.First .. YearMatch.Last));
     begin
       if YearInteger < 1901 or YearInteger > 2018 then
         return Absurd;
@@ -133,9 +135,10 @@ procedure Ageindays is
 
     declare
       DayInteger : Integer range 0..39;
+      DayMatch : GNAT.Regpat.Match_Location := Matches(1);
       DaysInBirthMonth : constant Day_Number := DaysInMonth(month, year);
     begin
-      DayInteger := Integer'Value(Input(Matches(1).First .. Matches(1).Last));
+      DayInteger := Integer'Value(Input(DayMatch.First .. DayMatch.Last));
       if DayInteger < Day_Number'First or DayInteger > DaysInBirthMonth then
         return Absurd;
       end if;
@@ -158,7 +161,9 @@ begin
 
   Put_Line("What is your birthday?");
   Put_Line("Supported formats by example:");
-  Put_Line("24th of September 1992");
+  Put_Line("-24th of September 1992");
+  Put_Line("-24 of September 1992");
+  Put_Line("-24 September 1992");
   loop
     Put("> ");
     declare
