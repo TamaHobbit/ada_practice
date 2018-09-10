@@ -144,7 +144,8 @@ procedure Ageindays is
 
   type InputStatus is (Good, Absurd);
 
-  function GetBirthDay(input : in String; day : out Day_Number; month : out Month_Number; year : out Year_Number) return InputStatus is
+  function GetBirthDay(input : in String; day : out Day_Number; month : out Month_Number; year : out Year_Number;
+                       today_day : in Day_Number; today_month : in Month_Number; today_year : in Year_Number) return InputStatus is
     unboundedMonths : String_Array := ToUnboundedStringArray(Months);
     Re : constant Pattern_Matcher := Compile("(^(1|2|3)?\d)(st|th|nd|rd)? (of )?(" & StringJoin("|", unboundedMonths) & ") ((19|20)\d{2})$");
     Matches : Match_Array (0..6);
@@ -167,10 +168,13 @@ procedure Ageindays is
       YearMatch : GNAT.Regpat.Match_Location := Matches(6);
       YearInteger : YearInput := YearInput'Value(Input(YearMatch.First .. YearMatch.Last));
     begin
-      if YearInteger < 1901 or YearInteger > 2018 then
+      if YearInteger < 1901 then
         return Absurd;
       end if;
       year := Year_Number(YearInteger);
+      if year > today_year then
+        return Absurd;
+      end if;
     end;
 
     declare
@@ -183,8 +187,14 @@ procedure Ageindays is
         return Absurd;
       end if;
       day := Day_Number(DayInteger);
-        return Good;
-      end;
+
+      if year = today_year then
+        if month > today_month or (month = today_month and day > today_day) then
+          return Absurd;
+        end if;
+      end if;
+      return Good;
+    end;
   end GetBirthDay;
 
   Today_Day : Day_Number;
@@ -214,7 +224,7 @@ begin
       Result : InputStatus;
     begin
       exit when Input = "";
-      Result := GetBirthDay(Input, BirthDay, BirthMonth, BirthYear); --TODO pass today's date so that dates in the future can be rejected
+      Result := GetBirthDay(Input, BirthDay, BirthMonth, BirthYear, Today_Day, Today_Month, Today_Year);
       if Result = Absurd then
         Put_Line("Don't be absurd. Tell me your real birthday");
       else
