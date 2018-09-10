@@ -1,6 +1,12 @@
 pragma Ada_2012;
 package body StringUtil is
 
+  function IntegerToString(number : in Integer) return String is
+    image : String := number'Image;
+  begin
+    return image(2..image'Length);
+  end IntegerToString;
+
   function StringJoin(seperator : in String; strings : in String_Array) return String is
   begin
     declare
