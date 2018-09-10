@@ -72,22 +72,27 @@ procedure Ageindays is
   type DifferenceYears is range Year_Number'First - Year_Number'Last..Year_Number'Last - Year_Number'First;
   type DifferenceMonths is range Month_Number'First - Month_Number'Last..Month_Number'Last - Month_Number'First;
   type DifferenceDays is range Day_Number'First - Day_Number'Last..Day_Number'Last - Day_Number'First;
-
-  function GetDaysBetween(birth_day : in Day_Number; birth_month : in Month_Number; birth_year : in Year_Number;
-                          today_day : in Day_Number; today_month : in Month_Number; today_year : in Year_Number) return Integer is
-  begin
-    --today_day - birth_day;
-    return 0;
-  end GetDaysBetween;
+  type NumberOfDaysOld is range 0..(366*(Year_Number'Last-Year_Number'First + 1));
 
   function PreviousMonth(month : in Month_Number) return Month_Number is
   begin
     return (if month = 1 then 12 else month - 1);
   end PreviousMonth;
 
+  function NextMonth(month : in Month_Number) return Month_Number is
+  begin
+    return (if month = 12 then 1 else month + 1);
+  end NextMonth;
+
+  function WrapMonth(month : in Integer) return Month_Number is
+  begin
+    return ((month - 1) mod 12) + 1;
+  end WrapMonth;
+
   procedure GetAgeDifference(birth_day : in Day_Number; birth_month : in Month_Number; birth_year : in Year_Number;
                             today_day : in Day_Number; today_month : in Month_Number; today_year : in Year_Number;
-                            DaysOld : out DifferenceDays; MonthsOld : out DifferenceMonths; YearsOld : out DifferenceYears) is
+                            DaysOld : out DifferenceDays; MonthsOld : out DifferenceMonths; YearsOld : out DifferenceYears;
+                            TotalDaysOld : out NumberOfDaysOld) is
   begin
     YearsOld := DifferenceYears(today_year - birth_year);
     MonthsOld := DifferenceMonths(today_month - birth_month);
@@ -99,6 +104,41 @@ procedure Ageindays is
     if MonthsOld < 0 then
       YearsOld := YearsOld - 1;
       MonthsOld := MonthsOld + 12;
+    end if;
+
+    declare
+      BirthDayBeforeLeapDay : Boolean := birth_month <= 2;
+    begin
+      TotalDaysOld := 0;
+      for year in birth_year..Year_Number(Integer(birth_year) + Integer(YearsOld) - 1) loop
+        declare
+          LeapDayYear : Year_Number := (if BirthDayBeforeLeapDay then year else year + 1);
+          DaysInYear : NumberOfDaysOld := (if IsLeapYear(LeapDayYear) then 366 else 365);
+        begin
+          TotalDaysOld := TotalDaysOld + DaysInYear;
+        end;
+      end loop;
+    end;
+
+    if MonthsOld = 0 and today_day >= birth_day then
+      TotalDaysOld := TotalDaysOld + NumberOfDaysOld(today_day - birth_day);
+    else
+      TotalDaysOld := TotalDaysOld + NumberOfDaysOld(DaysInMonth(birth_month, birth_year) - birth_day);
+      declare
+        beginMonth : Month_Number := NextMonth(birth_month);
+        endMonth : Month_Number := PreviousMonth(today_month);
+        unwrappedEndMonth : Integer := (if today_month >= beginMonth then endMonth else endMonth + 12);
+      begin
+        for month_unwrapped in beginMonth..unwrappedEndMonth loop
+          declare
+            month : Month_Number := Month_Number(WrapMonth(month_unwrapped));
+            yearOfMonth : Year_Number := (if month > today_month then today_year - 1 else today_year);
+          begin
+            TotalDaysOld := TotalDaysOld + NumberOfDaysOld(DaysInMonth(month, yearOfMonth));
+          end;
+        end loop;
+      end;
+      TotalDaysOld := TotalDaysOld + NumberOfDaysOld(today_day);
     end if;
   end GetAgeDifference;
 
@@ -183,9 +223,11 @@ begin
           YearsOld : DifferenceYears;
           MonthsOld : DifferenceMonths;
           DaysOld : DifferenceDays;
+          TotalDaysOld : NumberOfDaysOld;
         begin
-          GetAgeDifference(BirthDay, BirthMonth, BirthYear, Today_Day, Today_Month, Today_Year, DaysOld, MonthsOld, YearsOld);
+          GetAgeDifference(BirthDay, BirthMonth, BirthYear, Today_Day, Today_Month, Today_Year, DaysOld, MonthsOld, YearsOld, TotalDaysOld);
           Put_Line("You are" & YearsOld'Image & " years," & MonthsOld'Image & " months and" & DaysOld'Image & " days old.");
+          Put_Line("Total age in days:" & TotalDaysOld'Image);
         end;
       end if;
     end;
