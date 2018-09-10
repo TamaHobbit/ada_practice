@@ -146,7 +146,7 @@ procedure Ageindays is
 
   function GetBirthDay(input : in String; day : out Day_Number; month : out Month_Number; year : out Year_Number) return InputStatus is
     unboundedMonths : String_Array := ToUnboundedStringArray(Months);
-    Re : constant Pattern_Matcher := Compile("(^(1|2|3)?\d)(th|nd|rd)? (of )?(" & StringJoin("|", unboundedMonths) & ") ((19|20)\d{2})$");
+    Re : constant Pattern_Matcher := Compile("(^(1|2|3)?\d)(st|th|nd|rd)? (of )?(" & StringJoin("|", unboundedMonths) & ") ((19|20)\d{2})$");
     Matches : Match_Array (0..6);
   begin
     Match(Re, Input, Matches);
