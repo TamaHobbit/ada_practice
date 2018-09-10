@@ -8,7 +8,7 @@ with AgeCalculator;          use AgeCalculator;
 
 procedure Ageindays is
 
-  package Month_String is new Ada.Strings.Bounded.Generic_Bounded_Length(9);
+  package Month_String is new Ada.Strings.Bounded.Generic_Bounded_Length(13);
 
   type Month_String_Array is array (Month_Number'Range) of Month_String.Bounded_String;
 
@@ -22,26 +22,32 @@ procedure Ageindays is
   end ToUnboundedStringArray;
 
   Months : Month_String_Array := (
-                                  Month_String.To_Bounded_String("January"),
-                                  Month_String.To_Bounded_String("February"),
-                                  Month_String.To_Bounded_String("March"),
-                                  Month_String.To_Bounded_String("April"),
-                                  Month_String.To_Bounded_String("May"),
-                                  Month_String.To_Bounded_String("June"),
-                                  Month_String.To_Bounded_String("July"),
-                                  Month_String.To_Bounded_String("August"),
-                                  Month_String.To_Bounded_String("September"),
-                                  Month_String.To_Bounded_String("October"),
-                                  Month_String.To_Bounded_String("November"),
-                                  Month_String.To_Bounded_String("December")
+                                  Month_String.To_Bounded_String("(J|j)anuary"),
+                                  Month_String.To_Bounded_String("(F|f)ebruary"),
+                                  Month_String.To_Bounded_String("(M|m)arch"),
+                                  Month_String.To_Bounded_String("(A|a)pril"),
+                                  Month_String.To_Bounded_String("(M|m)ay"),
+                                  Month_String.To_Bounded_String("(J|j)une"),
+                                  Month_String.To_Bounded_String("(J|j)uly"),
+                                  Month_String.To_Bounded_String("(A|a)ugust"),
+                                  Month_String.To_Bounded_String("(S|s)eptember"),
+                                  Month_String.To_Bounded_String("(O|o)ctober"),
+                                  Month_String.To_Bounded_String("(N|n)ovember"),
+                                  Month_String.To_Bounded_String("(D|d)ecember")
                                  );
 
   function GetMonthIndex(monthName : in Month_String.Bounded_String) return Month_Number is
   begin
     for i in Month_Number'Range loop
-      if Month_String."="(monthName, Months(i)) then
-        return i;
-      end if;
+      declare
+        MonthRegex : constant Pattern_Matcher := Compile(Month_String.To_String(Months(i)));
+        Matches : Match_Array (0..1);
+      begin
+        Match(MonthRegex, Month_String.To_String(monthName), Matches);
+        if Matches(0) /= No_Match then
+          return i;
+        end if;
+      end;
     end loop;
     raise Program_Error;
   end GetMonthIndex;
@@ -52,7 +58,7 @@ procedure Ageindays is
                        today_day : in Day_Number; today_month : in Month_Number; today_year : in Year_Number) return InputStatus is
     unboundedMonths : String_Array := ToUnboundedStringArray(Months);
     Re : constant Pattern_Matcher := Compile("(^(1|2|3)?\d)(st|th|nd|rd)? (of )?(" & StringJoin("|", unboundedMonths) & ") ((19|20)\d{2})$");
-    Matches : Match_Array (0..6);
+    Matches : Match_Array (0..18);
   begin
     Match(Re, Input, Matches);
 
@@ -69,7 +75,7 @@ procedure Ageindays is
 
     declare
       type YearInput is range 1900..2099;
-      YearMatch : GNAT.Regpat.Match_Location := Matches(6);
+      YearMatch : GNAT.Regpat.Match_Location := Matches(18);
       YearInteger : YearInput := YearInput'Value(Input(YearMatch.First .. YearMatch.Last));
     begin
       if YearInteger < 1901 then
