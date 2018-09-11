@@ -1,3 +1,5 @@
+pragma Ada_2012;
+
 with Ada.Text_IO;            use Ada.Text_IO;
 with Ada.Calendar;           use Ada.Calendar;
 with StringUtil;             use StringUtil;
