@@ -45,6 +45,15 @@ package body DateInput is
     raise Program_Error;
   end GetMonthIndex;
 
+  type DateFormat is
+    record
+      regex : Unbounded_String;
+      highestIndex : Integer;
+      dayIndex : Integer;
+      monthIndex : Integer;
+      yearIndex : Integer;
+    end record;
+
   function GetDate(format : in DateFormat; input : in String; day : out Day_Number; 
                    month : out Month_Number; year : out Year_Number) return InputStatus is
     Re : constant Pattern_Matcher := Compile(To_String(format.regex));
@@ -118,13 +127,19 @@ package body DateInput is
     return (englishStandard, englishReverse);
   end GetDateFormats;
 
+  function GetDate(input : in String; day : out Day_Number; month : out Month_Number; 
+                   year : out Year_Number) return InputStatus is
+  begin
+    return GetDate(GetDateFormats, input, day, month, year);
+  end GetDate;
+
   function GetBirthDay(input : in String; day : out Day_Number; month : out Month_Number; 
                        year : out Year_Number; today_day : in Day_Number; 
                        today_month : in Month_Number; today_year : in Year_Number)
                          return InputStatus is
     fitsFormat : InputStatus := Good;
   begin
-    fitsFormat := GetDate(GetDateFormats, input, day, month, year);
+    fitsFormat := GetDate(input, day, month, year);
     if fitsFormat = Absurd then
       return Absurd;
     end if;
