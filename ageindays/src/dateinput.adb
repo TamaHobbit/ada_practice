@@ -45,11 +45,10 @@ package body DateInput is
     raise Program_Error;
   end GetMonthIndex;
 
-  function GetBirthDay(input : in String; day : out Day_Number; month : out Month_Number; year : out Year_Number;
-                       today_day : in Day_Number; today_month : in Month_Number; today_year : in Year_Number) return InputStatus is
-    unboundedMonths : String_Array := ToUnboundedStringArray(Months);
-    Re : constant Pattern_Matcher := Compile("(^(1|2|3)?\d)(st|th|nd|rd)? (of )?(" & StringJoin("|", unboundedMonths) & ") ((19|20)\d{2})$");
-    Matches : Match_Array (0..18);
+  function GetDate(format : in DateFormat; input : in String; day : out Day_Number; 
+                   month : out Month_Number; year : out Year_Number) return InputStatus is
+    Re : constant Pattern_Matcher := Compile(To_String(format.regex));
+    Matches : Match_Array (0..format.highestIndex);
   begin
     Match(Re, Input, Matches);
 
@@ -58,29 +57,26 @@ package body DateInput is
     end if;
 
     declare
-      MonthMatch : GNAT.Regpat.Match_Location := Matches(5);
-      MonthString : Month_String.Bounded_String := Month_String.To_Bounded_String(Input(MonthMatch.First .. MonthMatch.Last));
+      MonthMatch : GNAT.Regpat.Match_Location := Matches(format.monthIndex);
+      MonthString : Month_String.Bounded_String := Month_String.To_Bounded_String(
+                                          Input(MonthMatch.First .. MonthMatch.Last));
     begin
       month := Integer(GetMonthIndex(MonthString));
     end;
 
     declare
-      type YearInput is range 1900..2099;
-      YearMatch : GNAT.Regpat.Match_Location := Matches(18);
-      YearInteger : YearInput := YearInput'Value(Input(YearMatch.First .. YearMatch.Last));
+      YearMatch : GNAT.Regpat.Match_Location := Matches(format.yearIndex);
+      YearInteger : Integer := Integer'Value(Input(YearMatch.First .. YearMatch.Last));
     begin
-      if YearInteger < 1901 then
+      if YearInteger < 1901 or YearInteger > Year_Number'Last then
         return Absurd;
       end if;
       year := Year_Number(YearInteger);
-      if year > today_year then
-        return Absurd;
-      end if;
     end;
 
     declare
       DayInteger : Integer range 0..39;
-      DayMatch : GNAT.Regpat.Match_Location := Matches(1);
+      DayMatch : GNAT.Regpat.Match_Location := Matches(format.dayIndex);
       DaysInBirthMonth : constant Day_Number := DaysInMonth(month, year);
     begin
       DayInteger := Integer'Value(Input(DayMatch.First .. DayMatch.Last));
@@ -88,14 +84,59 @@ package body DateInput is
         return Absurd;
       end if;
       day := Day_Number(DayInteger);
-
-      if year = today_year then
-        if month > today_month or (month = today_month and day > today_day) then
-          return Absurd;
-        end if;
-      end if;
       return Good;
     end;
+  end GetDate;
+
+  type Format_Array is array (Integer range <>) of DateFormat;
+
+  function GetDate(formats : Format_Array; input : in String; day : out Day_Number;
+                   month : out Month_Number; year : out Year_Number)
+                     return InputStatus is
+    fitsFormat : InputStatus := Good;
+  begin
+    for I in formats'Range loop
+      fitsFormat := GetDate(formats(I), input, day, month, year);
+      if fitsFormat = Good then
+        return Good;
+      end if;
+    end loop;
+    return Absurd;
+  end GetDate;
+
+  function GetDateFormats return Format_Array is
+    unboundedMonths : String_Array := ToUnboundedStringArray(Months);
+    monthNameRegex : String := "(" & StringJoin("|", unboundedMonths) & ")";
+    englishStandard : constant DateFormat := (regex => To_Unbounded_String(
+                        "(^(1|2|3)?\d)(st|th|nd|rd)? (of )?" & monthNameRegex & 
+                        " ((19|20)\d{2})$"
+                      ), highestIndex => 19, dayIndex => 1, monthIndex => 5, yearIndex => 18);
+    englishReverse : constant DateFormat := (regex => To_Unbounded_String(
+                        monthNameRegex & " ((1|2|3)?\d)(st|th|nd|rd)?,? ((19|20)\d{2})$"
+                      ), highestIndex => 18, dayIndex => 14, monthIndex => 1, yearIndex => 17);
+  begin
+    return (englishStandard, englishReverse);
+  end GetDateFormats;
+
+  function GetBirthDay(input : in String; day : out Day_Number; month : out Month_Number; 
+                       year : out Year_Number; today_day : in Day_Number; 
+                       today_month : in Month_Number; today_year : in Year_Number)
+                         return InputStatus is
+    fitsFormat : InputStatus := Good;
+  begin
+    fitsFormat := GetDate(GetDateFormats, input, day, month, year);
+    if fitsFormat = Absurd then
+      return Absurd;
+    end if;
+    if year > today_year then
+      return Absurd;
+    end if;
+    if year = today_year then
+      if month > today_month or (month = today_month and day > today_day) then
+        return Absurd;
+      end if;
+    end if;
+    return Good;
   end GetBirthDay;
 
 end DateInput;

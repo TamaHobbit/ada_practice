@@ -24,6 +24,10 @@ begin
   Put_Line("-24th of September 1992");
   Put_Line("-24 of September 1992");
   Put_Line("-24 September 1992");
+  Put_Line("-September 24th, 1992");
+  Put_Line("-September 24th 1992");
+  Put_Line("-September 24, 1992");
+  Put_Line("-September 24 1992");
   loop
     Put("> ");
     declare
