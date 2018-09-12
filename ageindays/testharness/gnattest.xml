@@ -1,0 +1,45 @@
+<tests_mapping mode="monolith">
+   <unit source_file="agecalculator.ads">
+      <test_unit target_file="agecalculator-test_data-tests.ads">
+         <setup file="agecalculator-test_data.adb" name="Set_Up" line="8"  column="4"/>
+         <teardown file="agecalculator-test_data.adb" name="Tear_Down" line="14"  column="4"/>
+         <tested name="DaysInMonth" line="10" column="12">
+            <test file="agecalculator-test_data-tests.adb" line="39" column="1" name="Test_DaysInMonth_164afd" timestamp="2018-09-12 12:26:46"/>
+         </tested>
+         <tested name="GetAgeDifference" line="12" column="13">
+            <test file="agecalculator-test_data-tests.adb" line="60" column="1" name="Test_GetAgeDifference_062698" timestamp="2018-09-12 12:26:46"/>
+         </tested>
+         <dangling>
+         </dangling>
+      </test_unit>
+   </unit>
+   <unit source_file="dateinput.ads">
+      <test_unit target_file="dateinput-test_data-tests.ads">
+         <setup file="dateinput-test_data.adb" name="Set_Up" line="8"  column="4"/>
+         <teardown file="dateinput-test_data.adb" name="Tear_Down" line="14"  column="4"/>
+         <tested name="GetDate" line="12" column="12">
+            <test file="dateinput-test_data-tests.adb" line="39" column="1" name="Test_GetDate_cc90ae" timestamp="2018-09-12 12:26:46"/>
+         </tested>
+         <tested name="GetBirthDay" line="15" column="12">
+            <test file="dateinput-test_data-tests.adb" line="60" column="1" name="Test_GetBirthDay_e47e4e" timestamp="2018-09-12 12:26:46"/>
+         </tested>
+         <dangling>
+         </dangling>
+      </test_unit>
+   </unit>
+   <unit source_file="stringutil.ads">
+      <test_unit target_file="stringutil-test_data-tests.ads">
+         <setup file="stringutil-test_data.adb" name="Set_Up" line="8"  column="4"/>
+         <teardown file="stringutil-test_data.adb" name="Tear_Down" line="14"  column="4"/>
+         <tested name="IntegerToString" line="9" column="12">
+            <test file="stringutil-test_data-tests.adb" line="39" column="1" name="Test_IntegerToString_213542" timestamp="2018-09-12 12:26:46"/>
+         </tested>
+         <tested name="StringJoin" line="11" column="12">
+            <test file="stringutil-test_data-tests.adb" line="60" column="1" name="Test_StringJoin_7d3099" timestamp="2018-09-12 12:26:46"/>
+         </tested>
+         <dangling>
+         </dangling>
+      </test_unit>
+   </unit>
+   <additional_tests/>
+</tests_mapping>
