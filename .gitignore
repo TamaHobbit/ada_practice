@@ -1,5 +1,16 @@
-/*/obj/
 /*/tags
+
 *.ali
 *.exe
 *.o
+
+*.adb.stdout
+*.adb.stderr
+*.ads.stdout
+*.ads.stderr
+*.cgpr
+*-loc.xml
+gnatinspect.db*
+*.bexch
+b__test_runner.ads
+b__test_runner.adb
