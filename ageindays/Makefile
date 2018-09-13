@@ -9,5 +9,8 @@ test: tests/*
 	gprbuild -Ptestharness/test_driver
 	./testharness/test_runner
 
+tags: ageindays.exe
+	gnat xref -vf -aOobj *.ali | sed 's/C:\//..\/..\/..\//' | sed 's/\t\([^\/]*\.ad[bs]\)/\tsrc\/\1/' > tags
+
 clean:
 	rm -f *.o *.ali *.exe
