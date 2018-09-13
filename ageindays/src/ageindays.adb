@@ -17,7 +17,8 @@ begin
   begin
     Split(TodayTime, Today_Year, Today_Month, Today_Day, Today_Seconds);
   end;
-  Put_Line("Today is " & IntegerToString(Integer(Today_Day)) & '/' & IntegerToString(Today_Month) & '/' & IntegerToString(Today_Year));
+  Put_Line("Today is " & IntegerToString(Integer(Today_Day)) & '/' 
+                       & IntegerToString(Today_Month) & '/' & IntegerToString(Today_Year));
 
   Put_Line("What is your birthday?");
   Put_Line("Supported formats by example:");
@@ -38,19 +39,23 @@ begin
       Result : InputStatus;
     begin
       exit when Input = "";
-      Result := GetBirthDay(Input, BirthDay, BirthMonth, BirthYear, Today_Day, Today_Month, Today_Year);
+      Result := GetBirthDay(Input, BirthDay, BirthMonth, BirthYear, 
+                                   Today_Day, Today_Month, Today_Year);
       if Result = Absurd then
         Put_Line("Don't be absurd. Tell me your real birthday");
       else
-        Put_Line("Birthday: " & IntegerToString(BirthDay) & '/' & IntegerToString(BirthMonth) & '/' & IntegerToString(BirthYear));
+        Put_Line("Birthday: " & IntegerToString(BirthDay) & '/' 
+                              & IntegerToString(BirthMonth) & '/' & IntegerToString(BirthYear));
         declare
           YearsOld : DifferenceYears;
           MonthsOld : DifferenceMonths;
           DaysOld : DifferenceDays;
           TotalDaysOld : NumberOfDaysOld;
         begin
-          GetAgeDifference(BirthDay, BirthMonth, BirthYear, Today_Day, Today_Month, Today_Year, DaysOld, MonthsOld, YearsOld, TotalDaysOld);
-          Put_Line("You are" & YearsOld'Image & " years," & MonthsOld'Image & " months and" & DaysOld'Image & " days old.");
+          GetAgeDifference(BirthDay, BirthMonth, BirthYear, Today_Day, Today_Month, Today_Year,
+                           DaysOld, MonthsOld, YearsOld, TotalDaysOld);
+          Put_Line("You are" & YearsOld'Image & " years," & MonthsOld'Image 
+                             & " months and" & DaysOld'Image & " days old.");
           Put_Line("Total age in days:" & TotalDaysOld'Image);
         end;
       end if;
