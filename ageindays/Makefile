@@ -1,5 +1,3 @@
-all: ageindays.exe test
-
 ageindays.exe: src/*
 	gnatmake src/*
 
