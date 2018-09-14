@@ -4,48 +4,10 @@
          <setup file="agecalculator-test_data.adb" name="Set_Up" line="8"  column="4"/>
          <teardown file="agecalculator-test_data.adb" name="Tear_Down" line="14"  column="4"/>
          <tested name="DaysInMonth" line="10" column="12">
-            <test_case name="JanuaryHas31Days" line="11" column="10">
-               <test file="agecalculator-test_data-tests.adb" line="69" column="1" name="Test_DaysInMonth_164afd_e8df0d" timestamp="modified"/>
-            </test_case>
-            <test_case name="FebruaryHas28DaysInCommonYear" line="12" column="3">
-               <test file="agecalculator-test_data-tests.adb" line="115" column="1" name="Test_DaysInMonth_164afd_8234fb" timestamp="modified"/>
-            </test_case>
-            <test_case name="FebruaryHas29DaysInLeapYear" line="13" column="3">
-               <test file="agecalculator-test_data-tests.adb" line="166" column="1" name="Test_DaysInMonth_164afd_9ce495" timestamp="modified"/>
-            </test_case>
-            <test_case name="MarchHas31Days" line="14" column="3">
-               <test file="agecalculator-test_data-tests.adb" line="217" column="1" name="Test_DaysInMonth_164afd_32932e" timestamp="modified"/>
-            </test_case>
-            <test_case name="AprilHas30Days" line="15" column="3">
-               <test file="agecalculator-test_data-tests.adb" line="268" column="1" name="Test_DaysInMonth_164afd_108a74" timestamp="modified"/>
-            </test_case>
-            <test_case name="MayHas31Days" line="16" column="3">
-               <test file="agecalculator-test_data-tests.adb" line="319" column="1" name="Test_DaysInMonth_164afd_32e647" timestamp="modified"/>
-            </test_case>
-            <test_case name="JuneHas30Days" line="17" column="3">
-               <test file="agecalculator-test_data-tests.adb" line="370" column="1" name="Test_DaysInMonth_164afd_f2c915" timestamp="modified"/>
-            </test_case>
-            <test_case name="JulyHas31Days" line="18" column="3">
-               <test file="agecalculator-test_data-tests.adb" line="421" column="1" name="Test_DaysInMonth_164afd_6a1c72" timestamp="modified"/>
-            </test_case>
-            <test_case name="AugustHas31Days" line="19" column="3">
-               <test file="agecalculator-test_data-tests.adb" line="472" column="1" name="Test_DaysInMonth_164afd_b8163b" timestamp="modified"/>
-            </test_case>
-            <test_case name="SeptemberHas30Days" line="20" column="3">
-               <test file="agecalculator-test_data-tests.adb" line="523" column="1" name="Test_DaysInMonth_164afd_a38e78" timestamp="modified"/>
-            </test_case>
-            <test_case name="OctoberHas31Days" line="21" column="3">
-               <test file="agecalculator-test_data-tests.adb" line="574" column="1" name="Test_DaysInMonth_164afd_3d7caf" timestamp="modified"/>
-            </test_case>
-            <test_case name="NovemberHas30Days" line="22" column="3">
-               <test file="agecalculator-test_data-tests.adb" line="625" column="1" name="Test_DaysInMonth_164afd_e1685b" timestamp="modified"/>
-            </test_case>
-            <test_case name="DecemberHas31Days" line="23" column="3">
-               <test file="agecalculator-test_data-tests.adb" line="676" column="1" name="Test_DaysInMonth_164afd_cbc9c8" timestamp="modified"/>
-            </test_case>
+            <test file="agecalculator-test_data-tests.adb" line="39" column="1" name="Test_DaysInMonth_164afd" timestamp="2018-09-12 12:26:46"/>
          </tested>
-         <tested name="GetAgeDifference" line="25" column="13">
-            <test file="agecalculator-test_data-tests.adb" line="697" column="1" name="Test_GetAgeDifference_062698" timestamp="2018-09-14 11:56:44"/>
+         <tested name="GetAgeDifference" line="12" column="13">
+            <test file="agecalculator-test_data-tests.adb" line="60" column="1" name="Test_GetAgeDifference_062698" timestamp="2018-09-12 12:26:46"/>
          </tested>
          <dangling>
          </dangling>
@@ -56,10 +18,10 @@
          <setup file="dateinput-test_data.adb" name="Set_Up" line="8"  column="4"/>
          <teardown file="dateinput-test_data.adb" name="Tear_Down" line="14"  column="4"/>
          <tested name="GetDate" line="12" column="12">
-            <test file="dateinput-test_data-tests.adb" line="39" column="1" name="Test_GetDate_cc90ae" timestamp="2018-09-14 11:56:44"/>
+            <test file="dateinput-test_data-tests.adb" line="39" column="1" name="Test_GetDate_cc90ae" timestamp="2018-09-12 12:26:46"/>
          </tested>
          <tested name="GetBirthDay" line="15" column="12">
-            <test file="dateinput-test_data-tests.adb" line="60" column="1" name="Test_GetBirthDay_e47e4e" timestamp="2018-09-14 11:56:44"/>
+            <test file="dateinput-test_data-tests.adb" line="60" column="1" name="Test_GetBirthDay_e47e4e" timestamp="2018-09-12 12:26:46"/>
          </tested>
          <dangling>
          </dangling>
@@ -70,10 +32,10 @@
          <setup file="stringutil-test_data.adb" name="Set_Up" line="8"  column="4"/>
          <teardown file="stringutil-test_data.adb" name="Tear_Down" line="14"  column="4"/>
          <tested name="IntegerToString" line="9" column="12">
-            <test file="stringutil-test_data-tests.adb" line="39" column="1" name="Test_IntegerToString_213542" timestamp="2018-09-14 11:56:44"/>
+            <test file="stringutil-test_data-tests.adb" line="39" column="1" name="Test_IntegerToString_213542" timestamp="2018-09-12 12:26:46"/>
          </tested>
          <tested name="StringJoin" line="11" column="12">
-            <test file="stringutil-test_data-tests.adb" line="60" column="1" name="Test_StringJoin_7d3099" timestamp="2018-09-14 11:56:44"/>
+            <test file="stringutil-test_data-tests.adb" line="60" column="1" name="Test_StringJoin_7d3099" timestamp="2018-09-12 12:26:46"/>
          </tested>
          <dangling>
          </dangling>
