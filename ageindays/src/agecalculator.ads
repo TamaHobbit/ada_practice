@@ -5,7 +5,7 @@ package AgeCalculator is
   type DifferenceYears is range Year_Number'First - Year_Number'Last..Year_Number'Last - Year_Number'First;
   type DifferenceMonths is range Month_Number'First - Month_Number'Last..Month_Number'Last - Month_Number'First;
   type DifferenceDays is range Day_Number'First - Day_Number'Last..Day_Number'Last - Day_Number'First;
-  type NumberOfDaysOld is range 0..(366*(Year_Number'Last-Year_Number'First + 1));
+  subtype NumberOfDaysOld is Integer range 0..(366*(Year_Number'Last-Year_Number'First + 1));
 
   function DaysInMonth(month : in Month_Number; year : in Year_Number) return Day_Number;
 

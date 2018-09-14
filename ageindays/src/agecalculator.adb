@@ -71,12 +71,10 @@ package body AgeCalculator is
       TotalDaysOld := TotalDaysOld + 
         NumberOfDaysOld(DaysInMonth(birth_month, birth_year) - birth_day);
       declare
-        beginMonth : Month_Number := NextMonth(birth_month);
-        endMonth : Month_Number := PreviousMonth(today_month);
-        unwrappedEndMonth : Integer := 
-          (if today_month >= beginMonth then endMonth else endMonth + 12);
+        beginMonth : Integer := birth_month + 1;
+        endMonth : Integer := today_month - 1 + (if today_month < beginMonth then 12 else 0);
       begin
-        for month_unwrapped in beginMonth..unwrappedEndMonth loop
+        for month_unwrapped in beginMonth..endMonth loop
           declare
             month : Month_Number := Month_Number(WrapMonth(month_unwrapped));
             yearOfMonth : Year_Number := 
