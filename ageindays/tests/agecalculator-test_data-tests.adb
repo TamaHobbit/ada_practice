@@ -36,14 +36,9 @@ package body AgeCalculator.Test_Data.Tests is
    procedure Test_DaysInMonth (Gnattest_T : in out Test) is
    --  agecalculator.ads:10:3:DaysInMonth
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
    begin
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+     Assert(DaysInMonth(9, 2018) = 30, "September has 30 days");
 
 --  begin read only
    end Test_DaysInMonth;
