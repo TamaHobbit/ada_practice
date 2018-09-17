@@ -7,6 +7,7 @@
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
+with GNAT.Source_Info;
 
 --  begin read only
 --  id:2.2/00/
@@ -36,15 +37,54 @@ package body DateInput.Test_Data.Tests is
    procedure Test_GetDate (Gnattest_T : in out Test) is
    --  dateinput.ads:12:3:GetDate
 --  end read only
+     procedure CheckDate(input : in String; expected : in String;
+                          Line : Natural := GNAT.Source_Info.Line) is
+       day : Day_Number;
+       month : Month_Number;
+       year : Year_Number;
+       result : InputStatus;
+       garbage : Boolean;
+     begin
+       result := GetDate(input, day, month, year);
+       garbage := Assert(result = Good, "No parse for: " & input, Line => Line);
+       declare
+         parsedResult : String := IntegerToString(day) & "/" & 
+                                  IntegerToString(month) & "/" &
+                                  IntegerToString(year);
+       begin
+         Assert(parsedResult = expected, "Parsed: " & input &
+                                         " Expected: " & expected & 
+                                         " Actual: " & parsedResult, Line => Line);
+       end;
+     end CheckDate;
 
-      pragma Unreferenced (Gnattest_T);
-
+     procedure CheckInvalid(input : in String; Line : Natural := GNAT.Source_Info.Line) is
+       day : Day_Number;
+       month : Month_Number;
+       year : Year_Number;
+       result : InputStatus;
+       garbage : Boolean;
+     begin
+       result := GetDate(input, day, month, year);
+       garbage := Assert(result = Absurd, "Parsed: " & input & " Expected: no parse", Line => Line);
+     end CheckInvalid;
    begin
+     CheckDate("24th of September 1992", "24/9/1992");
+     CheckDate("7th of July 1901", "7/7/1901");
+     CheckDate("March 4th 1956", "4/3/1956");
+     CheckDate("24th of September 1992", "24/9/1992");
+     CheckDate("1 of September 1992", "1/9/1992");
+     CheckDate("1 September 1992", "1/9/1992");
+     CheckDate("29 February 2004", "29/2/2004");
+     CheckDate("1st of January 1901", "1/1/1901");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+     CheckInvalid("31st of December 1900");
+     CheckInvalid("29 February 2003");
+     CheckInvalid("31 April 2003");
+     CheckInvalid("-1 April 2003");
+     CheckInvalid("01 April 2003");
+     CheckInvalid("1sth of April 2003");
+     CheckInvalid("31st of December 2003 was a snowy cold night when I realised my life was vain");
 --  begin read only
    end Test_GetDate;
 --  end read only
@@ -57,15 +97,57 @@ package body DateInput.Test_Data.Tests is
    procedure Test_GetBirthDay (Gnattest_T : in out Test) is
    --  dateinput.ads:15:3:GetBirthDay
 --  end read only
+     procedure CheckBirthDay(input : in String; today_day : in Day_Number; 
+                             today_month : in Month_Number; today_year : in Year_Number;
+                             expected : in String;
+                             Line : Natural := GNAT.Source_Info.Line) is
+       day : Day_Number;
+       month : Month_Number;
+       year : Year_Number;
+       result : InputStatus;
+       garbage : Boolean;
+     begin
+       result := GetBirthDay(input, day, month, year, today_day, today_month, today_year);
+       garbage := Assert(result = Good, "No parse: " & input, Line => Line);
+       declare
+         parsedResult : String := IntegerToString(day) & "/" & 
+                                  IntegerToString(month) & "/" &
+                                  IntegerToString(year);
+       begin
+         Assert(parsedResult = expected, "Parsed: " & input &
+                                         " Expected: " & expected & 
+                                         " Actual: " & parsedResult, Line => Line);
+       end;
+     end CheckBirthDay;
 
-      pragma Unreferenced (Gnattest_T);
+     procedure CheckInvalid(input : in String; today_day : in Day_Number; 
+                            today_month : in Month_Number; today_year : in Year_Number;
+                            Line : Natural := GNAT.Source_Info.Line) is
+       day : Day_Number;
+       month : Month_Number;
+       year : Year_Number;
+       result : InputStatus;
+       garbage : Boolean;
+     begin
+       result := GetBirthDay(input, day, month, year, today_day, today_month, today_year);
+       garbage := Assert(result = Absurd, "Parsed: " & input & " Expected: no parse");
+     end CheckInvalid;
 
    begin
+     CheckBirthDay("25th of January 2000", 17, 9, 2018, "25/1/2000");
+     CheckBirthDay("May 8th 1931", 17, 9, 2018, "8/5/1931");
+     CheckBirthDay("17 September 2018", 17, 9, 2018, "17/9/2018");
+     CheckBirthDay("16 September 2018", 17, 9, 2018, "16/9/2018");
+     CheckBirthDay("18 August 2018", 17, 9, 2018, "18/8/2018");
+     CheckBirthDay("18 October 2017", 17, 9, 2018, "18/10/2017");
+     CheckBirthDay("1 January 1901", 17, 9, 2018, "1/1/1901");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+     CheckInvalid("31st of December 1900", 17, 9, 2018);
+     CheckInvalid("June 12th 2344", 17, 9, 2018);
+     CheckInvalid("June 12th 2087", 17, 9, 2018);
+     CheckInvalid("18th of September 2018", 17, 9, 2018);
+     CheckInvalid("16th of October 2018", 17, 9, 2018);
+     CheckInvalid("1st of January 2019", 17, 9, 2018);
 --  begin read only
    end Test_GetBirthDay;
 --  end read only
