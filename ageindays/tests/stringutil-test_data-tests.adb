@@ -244,15 +244,20 @@ package body StringUtil.Test_Data.Tests is
    procedure Test_StringJoin (Gnattest_T : in out Test) is
    --  stringutil.ads:11:3:StringJoin
 --  end read only
+    function "+"(S: String) return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
 
-      pragma Unreferenced (Gnattest_T);
-
+    procedure Check(seperator : in String; input : in String_Array; expected : in String; Line : Natural := GNAT.Source_Info.Line) is
+      result : String := StringJoin(seperator, input);
+      garbage : Boolean;
+    begin
+     garbage := Assert(result = expected, "Expected: " & expected &
+                                           " Actual: " & result, Line => Line);
+    end Check;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+     Check(",", (+"one", +"two"), "one,two");
+     Check("|", (1 => +"one"), "one");
+     Check(";", (+"f", +"t", +"i"), "f;t;i");
 --  begin read only
    end Test_StringJoin;
 --  end read only

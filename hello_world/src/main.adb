@@ -1,24 +1,23 @@
-with Ada.Text_IO; use Ada.Text_IO;
-
-procedure Main is
-
-  type Instance (Immutable : Positive) is record
-    Mutable : Integer;
-  end record;
-
-  A : Instance := (Immutable => 1, Mutable => 2);
-
-begin
-   loop
-      Put(A.Immutable'Image);
-      A.Mutable := 4;
-      Put_Line("What is your name?");
-      declare
-         Name : String := Get_Line;
+    with Ada.Strings.Unbounded;  use Ada.Strings.Unbounded;
+    
+    procedure Main is
+    
+      function "+"(S: String) return Ada.Strings.Unbounded.Unbounded_String
+        renames Ada.Strings.Unbounded.To_Unbounded_String;
+    
+      type String_Array is array (Positive range <>) of Unbounded_String;
+    
+      procedure Foo(input : in String_Array) is
       begin
-         exit when Name = "";
-         Put_Line("Hi " & Name & "!");
-      end;
-      Ada.Text_IO.Put_line("Bye!");
-   end loop;
-end Main;
+        null;
+      end Foo;
+    
+    begin
+      Foo((+"one", +"two"));                                    --(1)
+      --Foo((+"only"));                                         --(2) positional aggregate cannot have one component
+      Foo((1 => +"only"));                                      --(3)
+      --Foo((String_Array'First => +"only"));                   --(4) prefix for "First" attribute must be constrained array
+      --Foo((String_Array'Range => +"only"));                   --(5) prefix for "Range" attribute must be constrained array
+      --Foo((String_Array'Range'First => +"only"));             --(6) range attribute cannot be used in expression
+      --Foo((String_Array'Range'Type_Class'First => +"only"));  --(7) range attribute cannot be used in expression
+    end Main;
