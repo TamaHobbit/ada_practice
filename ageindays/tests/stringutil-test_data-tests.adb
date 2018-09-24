@@ -7,7 +7,6 @@
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
-with GNAT.Source_Info;
 
 --  begin read only
 --  id:2.2/00/
@@ -15,6 +14,8 @@ with GNAT.Source_Info;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
+
+with GNAT.Source_Info;
 
 --  begin read only
 --  end read only
