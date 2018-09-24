@@ -13,7 +13,7 @@ package body AgeCalculator.Test_Data.Tests.Suite is
    Result : aliased AUnit.Test_Suites.Test_Suite;
 
    Case_1_1_Test_DaysInMonth_164afd : aliased Runner_1.Test_Case;
-   Case_2_1_Test_GetAgeDifference_062698 : aliased Runner_1.Test_Case;
+   Case_2_1_Test_GetAgeDifference_f0660d : aliased Runner_1.Test_Case;
 
    function Suite return AUnit.Test_Suites.Access_Test_Suite is
    begin
@@ -23,12 +23,12 @@ package body AgeCalculator.Test_Data.Tests.Suite is
          "agecalculator.ads:10:3:",
          Test_DaysInMonth_164afd'Access);
       Runner_1.Create
-        (Case_2_1_Test_GetAgeDifference_062698,
+        (Case_2_1_Test_GetAgeDifference_f0660d,
          "agecalculator.ads:12:3:",
-         Test_GetAgeDifference_062698'Access);
+         Test_GetAgeDifference_f0660d'Access);
 
       Result.Add_Test (Case_1_1_Test_DaysInMonth_164afd'Access);
-      Result.Add_Test (Case_2_1_Test_GetAgeDifference_062698'Access);
+      Result.Add_Test (Case_2_1_Test_GetAgeDifference_f0660d'Access);
 
       return Result'Access;
 

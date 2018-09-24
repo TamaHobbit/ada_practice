@@ -63,8 +63,8 @@ package body AgeCalculator.Test_Data.Tests is
 
 --  begin read only
    procedure Test_GetAgeDifference (Gnattest_T : in out Test);
-   procedure Test_GetAgeDifference_062698 (Gnattest_T : in out Test) renames Test_GetAgeDifference;
---  id:2.2/062698c61d6bceda/GetAgeDifference/1/0/
+   procedure Test_GetAgeDifference_f0660d (Gnattest_T : in out Test) renames Test_GetAgeDifference;
+--  id:2.2/f0660ded7571d70e/GetAgeDifference/1/0/
    procedure Test_GetAgeDifference (Gnattest_T : in out Test) is
    --  agecalculator.ads:12:3:GetAgeDifference
 --  end read only
