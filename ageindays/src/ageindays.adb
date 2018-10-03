@@ -54,9 +54,10 @@ begin
         begin
           GetAgeDifference(BirthDay, BirthMonth, BirthYear, Today_Day, Today_Month, Today_Year,
                            DaysOld, MonthsOld, YearsOld, TotalDaysOld);
-          Put_Line("You are" & YearsOld'Image & " years," & MonthsOld'Image 
-                             & " months and" & DaysOld'Image & " days old.");
-          Put_Line("Total age in days:" & TotalDaysOld'Image);
+          Put_Line("You are" & DifferenceYears'Image(YearsOld) & " years," 
+                             & DifferenceMonths'Image(MonthsOld)
+                             & " months and" & DifferenceDays'Image(DaysOld) & " days old.");
+          Put_Line("Total age in days:" & NumberOfDaysOld'Image(TotalDaysOld));
         end;
       end if;
     end;

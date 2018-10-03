@@ -4,6 +4,7 @@
 *.ali
 *.exe
 *.o
+[^\.]*
 
 *.adb.stdout
 *.adb.stderr

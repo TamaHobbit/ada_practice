@@ -2,7 +2,7 @@ pragma Ada_2012;
 package body StringUtil is
 
   function IntegerToString(number : in Integer) return String is
-    image : String := number'Image;
+    image : String := Integer'Image(number);
   begin
     return image(2..image'Length);
   end IntegerToString;
