@@ -63,8 +63,6 @@ begin
    Exit_Status := Runner (Reporter, GT_Options);
    if Use_Exit_Status and then Exit_Status = AUnit.Failure then
       Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
-   else
-      Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Success);
    end if;
 end Test_Runner;
 --  end read only
