@@ -1,5 +1,5 @@
-ageindays.exe: src/*
-	gnatmake src/*
+ageindays.exe:
+	gprbuild -d -p -g
 
 regenerate_tests: src/*
 	gnattest -Pageindays.gpr --harness-dir=../testharness --tests-dir=../tests

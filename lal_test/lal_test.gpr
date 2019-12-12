@@ -1,0 +1,15 @@
+with "libadalang";
+
+project Lal_Test is
+    for Source_Dirs use ("src");
+    for Object_Dir use "obj";
+    for Main use ("main.adb");
+
+    package linker is
+      for trailing_switches("ada") use
+        ("-lgnarl",
+         "-lgnat",
+         "-mthreads");
+    end linker;
+end Lal_Test;
+

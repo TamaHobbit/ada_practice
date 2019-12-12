@@ -1,4 +1,5 @@
 pragma Ada_2012;
+
 package body AgeCalculator is
 
   function IsLeapYear(year : Year_Number) return Boolean is

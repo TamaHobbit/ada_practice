@@ -1,10 +1,10 @@
 /*/tags
+/*/obj/
 /*/cscope.*
 
 *.ali
 *.exe
 *.o
-[^\.]*
 
 *.adb.stdout
 *.adb.stderr

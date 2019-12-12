@@ -5,11 +5,14 @@ with Ada.Calendar;           use Ada.Calendar;
 with StringUtil;             use StringUtil;
 with AgeCalculator;          use AgeCalculator;
 with DateInput;              use DateInput;
+with Ada.Strings.Bounded;
 
 procedure Ageindays is
   Today_Day : Day_Number;
   Today_Month : Month_Number;
   Today_Year : Year_Number;
+  package FooBounded is new Ada.Strings.Bounded;
+  type FooString is new FooBOunded.Bounded_String;
 begin
   declare
     TodayTime : Time := Clock;
@@ -20,6 +23,11 @@ begin
   Put_Line("Today is " & IntegerToString(Integer(Today_Day)) & '/' 
                        & IntegerToString(Today_Month) & '/' & IntegerToString(Today_Year));
 
+<<<<<<< HEAD:file.txt
+Hello world
+=======
+Goodbye
+>>>>>>> 77976da35a11db4580b80ae27e8d65caf5208086:file.txt
   Put_Line("What is your birthday?");
   Put_Line("Supported formats by example:");
   Put_Line("-24th of September 1992");

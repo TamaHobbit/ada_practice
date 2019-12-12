@@ -1,0 +1,4 @@
+cp hello_world $1 -r
+cd $1
+mv helloworld.gpr $1.gpr
+sed "s/Helloworld/$1/" -i "$1.gpr" 
